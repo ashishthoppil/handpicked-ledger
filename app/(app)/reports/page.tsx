@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Wallet } from "lucide-react";
 import { PageHeader } from "@/components/app-shell";
+import { CapitalNote } from "@/components/capital-field";
 import { cn } from "@/lib/cn";
 import { getCapital, getReport } from "@/lib/data";
 import { formatDate, formatINR, formatMonth, formatSignedINR } from "@/lib/format";
@@ -55,9 +56,7 @@ export default async function ReportsPage() {
             <Wallet className="size-3.5" /> Current capital
           </h2>
           <p className="mt-4 text-2xl font-semibold tracking-tight">{formatINR(capital.amount)}</p>
-          <p className="mt-1 text-xs text-muted">
-            {capital.updatedAt ? `Updated ${formatDate(capital.updatedAt)}` : "Set it from the sidebar"}
-          </p>
+          <CapitalNote capital={capital} />
         </section>
       </div>
 

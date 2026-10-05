@@ -18,6 +18,7 @@ const SCHEMA = [
     rate NUMERIC(12, 2) NOT NULL CHECK (rate >= 0),
     created_at TIMESTAMPTZ NOT NULL DEFAULT now()
   )`,
+  `ALTER TABLE orders ADD COLUMN IF NOT EXISTS dispatched_at TIMESTAMPTZ`,
   `CREATE TABLE IF NOT EXISTS expenses (
     id SERIAL PRIMARY KEY,
     expense_date DATE NOT NULL DEFAULT CURRENT_DATE,

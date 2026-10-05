@@ -3,7 +3,7 @@
 import { useState, useTransition } from "react";
 import { Check, Pencil, Wallet, X } from "lucide-react";
 import { saveCapital } from "@/app/actions";
-import { formatDate, formatINR } from "@/lib/format";
+import { formatDate, formatINR, formatSignedINR } from "@/lib/format";
 import type { Capital } from "@/lib/types";
 import { buttonClass, cn } from "./ui";
 
@@ -65,15 +65,33 @@ export function CapitalField({ capital }: { capital: Capital }) {
               <X className="size-4" />
             </button>
           </div>
-          {error && <p className="mt-2 text-xs text-rose-600 dark:text-rose-400">{error}</p>}
+          {error ? (
+            <p className="mt-2 text-xs text-rose-600 dark:text-rose-400">{error}</p>
+          ) : (
+            <p className="mt-2 text-xs text-muted">New income and expenses will adjust it from here.</p>
+          )}
         </form>
       ) : (
         <>
           <p className="mt-1 text-2xl font-semibold tracking-tight">{formatINR(capital.amount)}</p>
-          <p className="mt-0.5 text-xs text-muted">
-            {capital.updatedAt ? `Updated ${formatDate(capital.updatedAt)}` : "Tap the pencil to set it"}
-          </p>
+          <CapitalNote capital={capital} />
         </>
+      )}
+    </div>
+  );
+}
+
+/** "Set ₹45,000 on 5 Oct" + the net change from entries since then. */
+export function CapitalNote({ capital }: { capital: Capital }) {
+  const changeClass =
+    capital.change > 0 ? "text-emerald-600 dark:text-emerald-400" : capital.change < 0 ? "text-rose-600 dark:text-rose-400" : "";
+  return (
+    <div className="mt-0.5 space-y-0.5 text-xs text-muted">
+      <p>{capital.setOn ? `Set to ${formatINR(capital.base)} on ${formatDate(capital.setOn, false)}` : "Income − expenses so far"}</p>
+      {capital.setOn && capital.change !== 0 && (
+        <p>
+          <span className={changeClass}>{formatSignedINR(capital.change)}</span> from entries since
+        </p>
       )}
     </div>
   );

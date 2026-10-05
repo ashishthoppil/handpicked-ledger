@@ -102,6 +102,18 @@ export async function deleteOrder(id: number): Promise<ActionResult> {
   });
 }
 
+export async function setDispatched(id: number, dispatched: boolean): Promise<ActionResult> {
+  return run(async () => {
+    if (!Number.isInteger(id)) throw new InvalidInput("Invalid record.");
+    await query(
+      dispatched
+        ? `UPDATE orders SET dispatched_at = COALESCE(dispatched_at, now()) WHERE id = $1`
+        : `UPDATE orders SET dispatched_at = NULL WHERE id = $1`,
+      [id],
+    );
+  });
+}
+
 // ── Expenses ──────────────────────────────────────────────────────────────
 
 export async function saveExpense(form: FormData): Promise<ActionResult> {

@@ -2,10 +2,10 @@
 
 Personal orders, expenses and reports app for **Handpicked by Mariam**. It's built for your phone (add it to your home screen) and prints courier labels from a laptop.
 
-- **Income**: add orders and print a courier shipping label for each one.
+- **Income**: add orders, print a courier shipping label for each one, and mark orders as dispatched. Use the *Not dispatched* filter to see what still needs to go out.
 - **Expense**: track what you spend.
 - **Financial Reports**: income, expense and profit/loss for this month and this year, plus monthly averages.
-- **Current capital**: set it from the sidebar.
+- **Current capital**: set it from the sidebar. Every order adds to it and every expense subtracts from it; editing or deleting those entries updates it too. Setting it by hand again makes that amount the new starting point.
 
 ## Run locally
 

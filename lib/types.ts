@@ -11,6 +11,7 @@ export type Order = {
   qty: number;
   rate: number;
   total: number;
+  dispatchedAt: string | null; // YYYY-MM-DD, null until dispatched
 };
 
 export type Expense = {
@@ -21,8 +22,10 @@ export type Expense = {
 };
 
 export type Capital = {
-  amount: number;
-  updatedAt: string | null; // YYYY-MM-DD
+  amount: number; // current capital = base + income − expenses entered since it was set
+  base: number; // amount last set by hand
+  setOn: string | null; // YYYY-MM-DD the base was set, null if never set
+  change: number; // income − expenses entered since then
 };
 
 export type ActionResult = { ok: true } | { ok: false; error: string };

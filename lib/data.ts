@@ -8,7 +8,8 @@ export async function getOrders(): Promise<Order[]> {
   await requireSession();
   return query<Order>(
     `SELECT id, order_date::text AS date, customer_name AS "customerName", address, city, state,
-            pincode, mobile, product, qty, rate::float8 AS rate, (qty * rate)::float8 AS total
+            pincode, mobile, product, qty, rate::float8 AS rate, (qty * rate)::float8 AS total,
+            (dispatched_at AT TIME ZONE 'Asia/Kolkata')::date::text AS "dispatchedAt"
        FROM orders
       ORDER BY order_date DESC, id DESC`,
   );
@@ -23,13 +24,25 @@ export async function getExpenses(): Promise<Expense[]> {
   );
 }
 
+/**
+ * Capital is the amount last set by hand plus every order minus every expense
+ * entered after that moment. Edits and deletes of those entries flow through too.
+ */
 export async function getCapital(): Promise<Capital> {
   await requireSession();
-  const [row] = await query<{ value: string; updatedAt: string }>(
-    `SELECT value, (updated_at AT TIME ZONE 'Asia/Kolkata')::date::text AS "updatedAt"
-       FROM settings WHERE key = 'capital'`,
+  const [row] = await query<{ base: number; setOn: string | null; income: number; expense: number }>(
+    `WITH anchor AS (
+       SELECT value::numeric AS base, updated_at FROM settings WHERE key = 'capital'
+     ), since AS (
+       SELECT COALESCE((SELECT updated_at FROM anchor), '-infinity'::timestamptz) AS at
+     )
+     SELECT COALESCE((SELECT base FROM anchor), 0)::float8 AS base,
+            (SELECT (updated_at AT TIME ZONE 'Asia/Kolkata')::date::text FROM anchor) AS "setOn",
+            COALESCE((SELECT SUM(qty * rate) FROM orders, since WHERE created_at > since.at), 0)::float8 AS income,
+            COALESCE((SELECT SUM(amount) FROM expenses, since WHERE created_at > since.at), 0)::float8 AS expense`,
   );
-  return row ? { amount: Number(row.value) || 0, updatedAt: row.updatedAt } : { amount: 0, updatedAt: null };
+  const change = row.income - row.expense;
+  return { amount: row.base + change, base: row.base, setOn: row.setOn, change };
 }
 
 export type MonthRow = { month: string; income: number; expense: number; profit: number };
