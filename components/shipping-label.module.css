@@ -1,0 +1,123 @@
+/* Physical label: 100 × 150 mm (4 × 6 in thermal). Printed as-is on thermal,
+   or centred on an A4 sheet to be cut out along the border. */
+
+.a4Page {
+  width: 210mm;
+  padding-top: 14mm;
+  display: flex;
+  justify-content: center;
+}
+
+.label {
+  width: 100mm;
+  height: 150mm;
+  padding: 3mm;
+  box-sizing: border-box;
+  background: #fff;
+  color: #000;
+  font-family: Arial, Helvetica, "Roboto", sans-serif;
+  line-height: 1.25;
+}
+
+.frame {
+  height: 100%;
+  box-sizing: border-box;
+  border: 0.6mm solid #000;
+  display: flex;
+  flex-direction: column;
+}
+
+.title {
+  padding: 2.2mm 4mm;
+  border-bottom: 0.4mm solid #000;
+  font-size: 9pt;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-align: center;
+}
+
+.from {
+  padding: 3.5mm 5mm 4mm;
+  font-size: 9.5pt;
+}
+
+.tag {
+  display: inline-block;
+  margin-bottom: 1.6mm;
+  padding: 0.6mm 2mm;
+  border: 0.35mm solid #000;
+  font-size: 7.5pt;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+}
+
+.tagSolid {
+  background: #000;
+  color: #fff;
+}
+
+.senderName {
+  font-size: 12pt;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  margin-bottom: 0.6mm;
+}
+
+.to {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 4.5mm 5mm 5mm;
+  border-top: 0.6mm solid #000;
+}
+
+/* --fit is lowered by script when a long address would overflow. */
+.toBody {
+  --fit: 1;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: calc(1.4mm * var(--fit));
+  font-size: calc(14.5pt * var(--fit));
+  overflow-wrap: anywhere;
+}
+
+.receiverName {
+  font-size: calc(22pt * var(--fit));
+  font-weight: 700;
+  line-height: 1.15;
+  text-transform: uppercase;
+  margin-bottom: calc(1.2mm * var(--fit));
+}
+
+.address {
+  white-space: pre-line;
+}
+
+.statePin {
+  margin-top: calc(1mm * var(--fit));
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  column-gap: 2mm;
+}
+
+.pin {
+  font-size: calc(30pt * var(--fit));
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  line-height: 1.1;
+}
+
+.mobile {
+  margin-top: calc(1.5mm * var(--fit));
+  font-size: calc(16pt * var(--fit));
+}
+
+.mobile strong {
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
